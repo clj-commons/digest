@@ -6,7 +6,9 @@
 
 ; Code "borrowed" from http://www.holygoat.co.uk/blog/entry/2009-03-26-1
 
-(defmulti digest (fn [_ m] (class m)))
+(defmulti digest
+  "Returns digest for message with given algorithm"
+  (fn [algorithm message] (class message)))
 
 (defmethod digest String [algorithm message]
   (digest algorithm [message]))
@@ -25,9 +27,10 @@
         digest-names (filter #(re-find #"MessageDigest\.[A-Z0-9-]+$" %) names)]
     (set (map #(last (split % #"\.")) digest-names))))
 
-
-(defn create-fns []
+(defn- create-fns []
   "Create utility function for each digest algorithms"
   (dorun (map #(intern 'digest (symbol (lower-case %)) (partial digest %))
               (algorithms))))
+
+; Create utililty functions such as md5, sha-2 ...
 (create-fns)
