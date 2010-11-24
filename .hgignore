@@ -1,0 +1,7 @@
+syntax: glob
+
+README.html
+classes
+digest-*.jar
+lib
+pom.xml
