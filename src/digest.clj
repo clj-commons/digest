@@ -2,22 +2,49 @@
   #^{ :author "Miki Tebeka <miki.tebeka@gmail.com>"
       :doc "Message digest algorithms for Clojure"}
   (:use [clojure.string :only (split lower-case)])
-  (:import (java.security MessageDigest Security)))
+  (:import (java.security MessageDigest Security)
+           (java.io FileInputStream File InputStream)))
 
+; Default buffer size for reading
+(def *buffer-size* 1024)
+(def ByteArray (type (make-array Byte/TYPE 0)))
+
+(defn- read-some 
+  "Read some data from reader. Return [data size] if there's more to read,
+  otherwise nil."
+  [reader]
+  (let [buffer (make-array Byte/TYPE *buffer-size*)
+        size (.read reader buffer)]
+    (when (> size 0) [buffer size])))
+
+(defn- byte-seq
+  "Return a sequence of [data size] from reader."
+  [reader]
+  (take-while (complement nil?) (repeatedly (partial read-some reader))))
 
 (defmulti digest
-  "Returns digest for message with given algorithm."
+  "Returns digest for input with given algorithm."
   (fn [algorithm message] (class message)))
 
 (defmethod digest String [algorithm message]
-  (digest algorithm [message]))
+  (digest algorithm (.getBytes message)))
 
-; Code "borrowed" from http://www.holygoat.co.uk/blog/entry/2009-03-26-1
-(defmethod digest :default
-  [algorithm messages]
+(defmethod digest ByteArray [algorithm message]
+  (digest algorithm [[message (count message)]]))
+
+(defmethod digest File [algorithm file]
+  (digest algorithm (FileInputStream. file)))
+
+(defmethod digest InputStream [algorithm reader]
+  (digest algorithm (byte-seq reader)))
+
+; Code "borrowed" from 
+; * http://www.holygoat.co.uk/blog/entry/2009-03-26-1
+; * http://www.rgagnon.com/javadetails/java-0416.html 
+(defmethod digest :default [algorithm chunks]
   (let [algo (MessageDigest/getInstance algorithm)]
     (.reset algo)
-    (dorun (map #(.update algo (.getBytes %)) messages))
+    (dorun (map (fn [[message size]] (.update algo message 0 size)) chunks))
     (.toString (BigInteger. 1 (.digest algo)) 16)))
 
 (defn algorithms []

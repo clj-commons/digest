@@ -1,7 +1,8 @@
 (ns digest-test
   (:use [digest] :reload-all)
   (:use [clojure.string :only (lower-case)])
-  (:use [clojure.test]))
+  (:use [clojure.test])
+  (:import java.io.File))
 
 (deftest md5-test
   (is (= (digest "md5" "foo") "acbd18db4cc2f85cedef654fccc4a4d8")))
@@ -18,3 +19,12 @@
 (deftest utils-test
   (for [name (algorithms)]
     (dorun (is (ns-resolve *ns* (symbol (lower-case name)))))))
+
+(def *logo-md5* "38cf20fa3c9dc72be56965eb1c311dfa")
+(def *logo-sha256* 
+  "42c2af2a0509832f39d0cef3ecd1612b7857c55abbe2170470eabb2a0318701c")
+
+(deftest file-test
+  (let [f (File. "test/clojure.png")]
+    (is (= (md5 f) *logo-md5*))
+    (is (= (sha-256 f) *logo-sha256*))))
