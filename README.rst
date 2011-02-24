@@ -4,6 +4,15 @@ digest
 
 `digest` - Message digest library for Clojure. Providing md5, sha-256, ...
 
+There are several digest function (such as `md5`, `sha-256` ...) in this
+namespace. Each can handle the following input types:
+
+* java.lang.String
+* byte array
+* java.io.File
+* java.io.InputStream
+* Sequence of [byte-array size]
+
 Usage
 =====
 ::
@@ -13,18 +22,18 @@ Usage
     ; On a string
     user=> (digest/md5 "foo")
     "acbd18db4cc2f85cedef654fccc4a4d8"
-    ; On a seq
+    ; On a file
     user=> (use 'clojure.java.io)
     nil
-    user=> (digest/sha-256 (line-seq (reader "/tmp/hello.txt")))
+    user=> (digest/sha-256 (as-file "/tmp/hello.txt"))
     "163883d3e0e3b0c028d35b626b98564be8d9d649ed8adb8b929cb8c94c735c59"
 
 Installation
 ============
-Add `[digest "1.0.0-SNAPSHOT"]` to your `project.clj`
+Add `[digest "1.1.0"]` to your `project.clj`
 
 License
 =======
-Copyright (C) 2010 Miki Tebeka <miki.tebeka@gmail.com>
+Copyright (C) 2011 Miki Tebeka <miki.tebeka@gmail.com>
 
 Distributed under the Eclipse Public License, the same as Clojure.
