@@ -28,3 +28,7 @@
   (let [f (File. "test/clojure.png")]
     (is (= (md5 f) *logo-md5*))
     (is (= (sha-256 f) *logo-sha256*))))
+
+; Just making sure that we don't explode on nil
+(deftest nil-test
+  (md5 nil))
