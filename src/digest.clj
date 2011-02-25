@@ -2,11 +2,14 @@
   #^{ :author "Miki Tebeka <miki.tebeka@gmail.com>"
       :doc "Message digest algorithms for Clojure"}
   (:use [clojure.string :only (split lower-case)])
-  (:import (java.security MessageDigest Security)
+  (:import java.util.Arrays
+           (java.security MessageDigest Security)
            (java.io FileInputStream File InputStream)))
 
 ; Default buffer size for reading
 (def *buffer-size* 1024)
+
+; Why on earth is java.io.byte-array-type private?
 (def ByteArray (type (make-array Byte/TYPE 0)))
 
 (defn- read-some 
@@ -15,7 +18,8 @@
   [reader]
   (let [buffer (make-array Byte/TYPE *buffer-size*)
         size (.read reader buffer)]
-    (when (> size 0) [buffer size])))
+    (when (> size 0)
+      (if (= size *buffer-size*) buffer (Arrays/copyOf buffer size)))))
 
 (defn- byte-seq
   "Return a sequence of [data size] from reader."
@@ -30,7 +34,7 @@
   (digest algorithm (.getBytes message)))
 
 (defmethod digest ByteArray [algorithm message]
-  (digest algorithm [[message (count message)]]))
+  (digest algorithm [message]))
 
 (defmethod digest File [algorithm file]
   (digest algorithm (FileInputStream. file)))
@@ -44,7 +48,7 @@
 (defmethod digest :default [algorithm chunks]
   (let [algo (MessageDigest/getInstance algorithm)]
     (.reset algo)
-    (dorun (map (fn [[message size]] (.update algo message 0 size)) chunks))
+    (dorun (map #(.update algo %) chunks))
     (.toString (BigInteger. 1 (.digest algo)) 16)))
 
 (defn algorithms []

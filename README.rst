@@ -11,7 +11,7 @@ namespace. Each can handle the following input types:
 * byte array
 * java.io.File
 * java.io.InputStream
-* Sequence of [byte-array size]
+* Sequence of byte array
 
 Usage
 =====
@@ -30,7 +30,7 @@ Usage
 
 Installation
 ============
-Add `[digest "1.1.0"]` to your `project.clj`
+Add `[digest "1.2.0"]` to your `project.clj`
 
 License
 =======
