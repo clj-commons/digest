@@ -32,3 +32,7 @@
 ; Just making sure that we don't explode on nil
 (deftest nil-test
   (md5 nil))
+
+(deftest length-test
+  (is (= (sha (File. "test/length.txt")) 
+        "007b65165b253172d054189e8e3175f3bcb9e28e")))

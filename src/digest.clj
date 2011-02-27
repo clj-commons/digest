@@ -26,6 +26,14 @@
   [reader]
   (take-while (complement nil?) (repeatedly (partial read-some reader))))
 
+(defn- signature
+  "Get signature (string) of digest."
+  [algorithm]
+  (let [size (* 2 (.getDigestLength algorithm))
+        sig (.toString (BigInteger. 1 (.digest algorithm)) 16)
+        padding (apply str (repeat (- size (count sig)) "0"))]
+    (str padding sig)))
+
 (defmulti digest
   "Returns digest for input with given algorithm."
   (fn [algorithm message] (class message)))
@@ -49,7 +57,7 @@
   (let [algo (MessageDigest/getInstance algorithm)]
     (.reset algo)
     (dorun (map #(.update algo %) chunks))
-    (.toString (BigInteger. 1 (.digest algo)) 16)))
+    (signature algo)))
 
 (defn algorithms []
   "List support digest algorithms."
