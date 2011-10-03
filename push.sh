@@ -19,4 +19,4 @@ fi
 lein jar
 lein pom
 scp pom.xml $jar clojars@clojars.org:
-rm pox.xml $jar
+rm pom.xml $jar
