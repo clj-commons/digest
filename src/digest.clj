@@ -7,7 +7,7 @@
            (java.io FileInputStream File InputStream)))
 
 ; Default buffer size for reading
-(def *buffer-size* 1024)
+(def ^:dynamic *buffer-size* 1024)
 
 ; Why on earth is java.io.byte-array-type private?
 (def ByteArray (type (make-array Byte/TYPE 0)))
