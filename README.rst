@@ -30,7 +30,7 @@ Usage
 
 Installation
 ============
-Add `[digest "1.2.1"]` to your `project.clj`
+Add `[digest "1.3.0"]` to your `project.clj`
 
 License
 =======
