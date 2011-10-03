@@ -20,8 +20,8 @@
   (for [name (algorithms)]
     (dorun (is (ns-resolve *ns* (symbol (lower-case name)))))))
 
-(def *logo-md5* "38cf20fa3c9dc72be56965eb1c311dfa")
-(def *logo-sha256* 
+(def ^:dynamic *logo-md5* "38cf20fa3c9dc72be56965eb1c311dfa")
+(def ^:dynamic *logo-sha256* 
   "42c2af2a0509832f39d0cef3ecd1612b7857c55abbe2170470eabb2a0318701c")
 
 (deftest file-test
