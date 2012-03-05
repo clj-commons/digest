@@ -12,7 +12,7 @@
 ; Why on earth is java.io.byte-array-type private?
 (def ByteArray (type (make-array Byte/TYPE 0)))
 
-(defn- read-some 
+(defn- read-some
   "Read some data from reader. Return [data size] if there's more to read,
   otherwise nil."
   [reader]
@@ -50,9 +50,9 @@
 (defmethod digest InputStream [algorithm reader]
   (digest algorithm (byte-seq reader)))
 
-; Code "borrowed" from 
+; Code "borrowed" from
 ; * http://www.holygoat.co.uk/blog/entry/2009-03-26-1
-; * http://www.rgagnon.com/javadetails/java-0416.html 
+; * http://www.rgagnon.com/javadetails/java-0416.html
 (defmethod digest :default [algorithm chunks]
   (let [algo (MessageDigest/getInstance algorithm)]
     (.reset algo)
