@@ -3,7 +3,7 @@
       :doc "Message digest algorithms for Clojure"}
   (:use [clojure.string :only (split lower-case)])
   (:import java.util.Arrays
-           (java.security MessageDigest Security)
+           (java.security MessageDigest Security Provider)
            (java.io FileInputStream File InputStream)))
 
 ; Default buffer size for reading
@@ -15,20 +15,20 @@
 (defn- read-some
   "Read some data from reader. Return [data size] if there's more to read,
   otherwise nil."
-  [reader]
-  (let [buffer (make-array Byte/TYPE *buffer-size*)
+  [^InputStream reader]
+  (let [^bytes  buffer (make-array Byte/TYPE *buffer-size*)
         size (.read reader buffer)]
     (when (> size 0)
       (if (= size *buffer-size*) buffer (Arrays/copyOf buffer size)))))
 
 (defn- byte-seq
   "Return a sequence of [data size] from reader."
-  [reader]
+  [^InputStream reader]
   (take-while (complement nil?) (repeatedly (partial read-some reader))))
 
 (defn- signature
   "Get signature (string) of digest."
-  [algorithm]
+  [^MessageDigest algorithm]
   (let [size (* 2 (.getDigestLength algorithm))
         sig (.toString (BigInteger. 1 (.digest algorithm)) 16)
         padding (apply str (repeat (- size (count sig)) "0"))]
@@ -38,31 +38,31 @@
   "Returns digest for input with given algorithm."
   (fn [algorithm message] (class message)))
 
-(defmethod digest String [algorithm message]
+(defmethod digest String [algorithm ^String message]
   (digest algorithm (.getBytes message)))
 
-(defmethod digest ByteArray [algorithm message]
+(defmethod digest ByteArray [algorithm ^bytes message]
   (digest algorithm [message]))
 
-(defmethod digest File [algorithm file]
+(defmethod digest File [algorithm ^File file]
   (digest algorithm (FileInputStream. file)))
 
-(defmethod digest InputStream [algorithm reader]
+(defmethod digest InputStream [algorithm ^InputStream reader]
   (digest algorithm (byte-seq reader)))
 
 ; Code "borrowed" from
 ; * http://www.holygoat.co.uk/blog/entry/2009-03-26-1
 ; * http://www.rgagnon.com/javadetails/java-0416.html
 (defmethod digest :default [algorithm chunks]
-  (let [algo (MessageDigest/getInstance algorithm)]
+  (let [^MessageDigest algo (MessageDigest/getInstance algorithm)]
     (.reset algo)
-    (dorun (map #(.update algo %) chunks))
+    (dorun (map (fn [^bytes b] (.update algo b)) chunks))
     (signature algo)))
 
 (defn algorithms []
   "List support digest algorithms."
   (let [providers (into [] (Security/getProviders))
-        names (mapcat #(enumeration-seq (.keys %)) providers)
+        names (mapcat (fn [^Provider p] (enumeration-seq (.keys p))) providers)
         digest-names (filter #(re-find #"MessageDigest\.[A-Z0-9-]+$" %) names)]
     (set (map #(last (split % #"\.")) digest-names))))
 
