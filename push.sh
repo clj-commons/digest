@@ -1,22 +1,5 @@
 #!/bin/bash
-# Push to clojars
+# Push both to bitbucket and github
 
-set -x
-set -e
-
-if [ ! -f project.clj ]; then
-    echo "error: can't find project.clj" 1>&2
-    exit 1
-fi
-
-project=$(grep defproject project.clj | awk '{print $2}')
-version=$(egrep -o "[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?" project.clj  | head -1)
-jar=$project-${version}.jar
-
-if [ -f $jar ]; then
-    rm $jar
-fi
-lein jar
-lein pom
-scp pom.xml $jar clojars@clojars.org:
-rm pom.xml $jar
+hg push
+hg push git+ssh://git@github.com/tebeka/clj-digest.git
