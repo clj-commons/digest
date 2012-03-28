@@ -32,6 +32,10 @@ Installation
 ============
 Add `[digest "1.3.0"]` to your `project.clj`
 
+Builds
+======
+http://travis-ci.org/#!/tebeka/clj-digest
+
 License
 =======
 Copyright (C) 2011 Miki Tebeka <miki.tebeka@gmail.com>
