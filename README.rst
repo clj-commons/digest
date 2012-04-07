@@ -38,6 +38,6 @@ http://travis-ci.org/#!/tebeka/clj-digest
 
 License
 =======
-Copyright (C) 2011 Miki Tebeka <miki.tebeka@gmail.com>
+Copyright (C) 2012 Miki Tebeka <miki.tebeka@gmail.com>
 
 Distributed under the Eclipse Public License, the same as Clojure.
