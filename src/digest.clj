@@ -45,7 +45,8 @@
   (digest algorithm [message]))
 
 (defmethod digest File [algorithm ^File file]
-  (digest algorithm (FileInputStream. file)))
+  (with-open [f (FileInputStream. file)]
+    (digest algorithm f)))
 
 (defmethod digest InputStream [algorithm ^InputStream reader]
   (digest algorithm (byte-seq reader)))
