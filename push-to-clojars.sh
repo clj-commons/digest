@@ -11,7 +11,7 @@ fi
 
 project=$(grep defproject project.clj | awk '{print $2}')
 version=$(egrep -o "[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?" project.clj  | head -1)
-jar=$project-${version}.jar
+jar=target/$project-${version}.jar
 
 if [ -f $jar ]; then
     rm $jar
