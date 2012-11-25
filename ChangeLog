@@ -1,3 +1,6 @@
+2012-11-24 version 1.4.1
+    * Fix file descriptor leak (thanks Craig Ludington)
+
 2012-03-04 version 1.4.0
     * Remove reflections (thanks naitik!)
 
