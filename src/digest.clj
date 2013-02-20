@@ -3,29 +3,29 @@
       :doc "Message digest algorithms for Clojure"}
   (:use [clojure.string :only (split lower-case)])
   (:import java.util.Arrays
-           (java.security MessageDigest Security)
+           (java.security MessageDigest Security Provider)
            (java.io FileInputStream File InputStream)))
 
 ; Default buffer size for reading
 (def ^:dynamic *buffer-size* 1024)
 
-(defn- read-some 
+(defn- read-some
   "Read some data from reader. Return [data size] if there's more to read,
   otherwise nil."
-  [reader]
-  (let [buffer (make-array Byte/TYPE *buffer-size*)
+  [^InputStream reader]
+  (let [^bytes  buffer (make-array Byte/TYPE *buffer-size*)
         size (.read reader buffer)]
     (when (> size 0)
       (if (= size *buffer-size*) buffer (Arrays/copyOf buffer size)))))
 
 (defn- byte-seq
   "Return a sequence of [data size] from reader."
-  [reader]
+  [^InputStream reader]
   (take-while (complement nil?) (repeatedly (partial read-some reader))))
 
 (defn- signature
   "Get signature (string) of digest."
-  [algorithm]
+  [^MessageDigest algorithm]
   (let [size (* 2 (.getDigestLength algorithm))
         sig (.toString (BigInteger. 1 (.digest algorithm)) 16)
         padding (apply str (repeat (- size (count sig)) "0"))]
@@ -44,24 +44,23 @@
   ;; * http://www.holygoat.co.uk/blog/entry/2009-03-26-1
   ;; * http://www.rgagnon.com/javadetails/java-0416.html 
   (-digest [message algorithm]
-    (let [algo (MessageDigest/getInstance algorithm)]
+    (let [^MessageDigest algo (MessageDigest/getInstance algorithm)]
       (.reset algo)
-      (doseq [chunk message] (.update algo chunk))
+      (doseq [^bytes b message] (.update algo b))
       (signature algo)))
 
   String
   (-digest [message algorithm]
     (-digest [(.getBytes message)] algorithm))
   
-  
-
   InputStream
   (-digest [reader algorithm]
     (-digest (byte-seq reader) algorithm))
   
   File
   (-digest [file algorithm]
-    (-digest (FileInputStream. file) algorithm))
+    (with-open [f (FileInputStream. file)]
+      (-digest algorithm f)))
 
   nil
   (-digest [message algorithm]
@@ -75,7 +74,7 @@
 (defn algorithms []
   "List support digest algorithms."
   (let [providers (into [] (Security/getProviders))
-        names (mapcat #(enumeration-seq (.keys %)) providers)
+        names (mapcat (fn [^Provider p] (enumeration-seq (.keys p))) providers)
         digest-names (filter #(re-find #"MessageDigest\.[A-Z0-9-]+$" %) names)]
     (set (map #(last (split % #"\.")) digest-names))))
 
