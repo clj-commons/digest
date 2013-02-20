@@ -60,7 +60,7 @@
   File
   (-digest [file algorithm]
     (with-open [f (FileInputStream. file)]
-      (-digest algorithm f)))
+      (-digest f algorithm)))
 
   nil
   (-digest [message algorithm]
