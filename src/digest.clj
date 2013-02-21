@@ -9,9 +9,6 @@
 ; Default buffer size for reading
 (def ^:dynamic *buffer-size* 1024)
 
-; Why on earth is java.io.byte-array-type private?
-(def ByteArray (type (make-array Byte/TYPE 0)))
-
 (defn- read-some
   "Read some data from reader. Return [data size] if there's more to read,
   otherwise nil."
@@ -34,31 +31,45 @@
         padding (apply str (repeat (- size (count sig)) "0"))]
     (str padding sig)))
 
-(defmulti digest
-  "Returns digest for input with given algorithm."
-  (fn [algorithm message] (class message)))
+(defprotocol Digestible
+  (-digest [message algorithm]))
 
-(defmethod digest String [algorithm ^String message]
-  (digest algorithm (.getBytes message)))
+(extend-protocol Digestible
+  (class (make-array Byte/TYPE 0))
+  (-digest  [message algorithm]
+    (-digest [message] algorithm))
+  
+  java.util.Collection
+  ;; Code "borrowed" from 
+  ;; * http://www.holygoat.co.uk/blog/entry/2009-03-26-1
+  ;; * http://www.rgagnon.com/javadetails/java-0416.html 
+  (-digest [message algorithm]
+    (let [^MessageDigest algo (MessageDigest/getInstance algorithm)]
+      (.reset algo)
+      (doseq [^bytes b message] (.update algo b))
+      (signature algo)))
 
-(defmethod digest ByteArray [algorithm ^bytes message]
-  (digest algorithm [message]))
+  String
+  (-digest [message algorithm]
+    (-digest [(.getBytes message)] algorithm))
+  
+  InputStream
+  (-digest [reader algorithm]
+    (-digest (byte-seq reader) algorithm))
+  
+  File
+  (-digest [file algorithm]
+    (with-open [f (FileInputStream. file)]
+      (-digest f algorithm)))
 
-(defmethod digest File [algorithm ^File file]
-  (with-open [f (FileInputStream. file)]
-    (digest algorithm f)))
+  nil
+  (-digest [message algorithm]
+    nil))
 
-(defmethod digest InputStream [algorithm ^InputStream reader]
-  (digest algorithm (byte-seq reader)))
-
-; Code "borrowed" from
-; * http://www.holygoat.co.uk/blog/entry/2009-03-26-1
-; * http://www.rgagnon.com/javadetails/java-0416.html
-(defmethod digest :default [algorithm chunks]
-  (let [^MessageDigest algo (MessageDigest/getInstance algorithm)]
-    (.reset algo)
-    (dorun (map (fn [^bytes b] (.update algo b)) chunks))
-    (signature algo)))
+(defn digest
+  "Returns digest for message with given algorithm."
+  [algorithm message]
+  (-digest message algorithm))
 
 (defn algorithms []
   "List support digest algorithms."
