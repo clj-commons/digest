@@ -30,7 +30,7 @@ Usage
 
 Installation
 ============
-Add `[digest "1.3.0"]` to your `project.clj`
+Add `[digest "1.4.3"]` to your `project.clj`.
 
 Builds
 ======
