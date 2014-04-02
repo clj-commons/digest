@@ -1,3 +1,7 @@
+2014-04-02 version 1.4.4
+    * Clojure 1.6
+    * README.rst -> README.md
+
 2013-02-20 version 1.4.3
     * Using protocols (thanks DerGuteMoritz)
 
