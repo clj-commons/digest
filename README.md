@@ -32,4 +32,4 @@ Add `[digest "1.4.4"]` to your `project.clj`.
 # License
 Copyright&copy; 2016 Miki Tebeka <miki.tebeka@gmail.com>
 
-Distributed under the Eclipse Public License, the same as Clojure.
+Distributed under the Eclipse Public License (same as Clojure).
