@@ -1,5 +1,7 @@
 # digest
 
+[![Build Status](https://travis-ci.org/tebeka/clj-digest.svg?branch=master)](https://travis-ci.org/tebeka/clj-digest)
+
 `digest` - Message digest library for Clojure. Providing md5, sha-256, ...
 
 There are several digest function (such as `md5`, `sha-256` ...) in this
@@ -27,10 +29,7 @@ namespace. Each can handle the following input types:
 # Installation
 Add `[digest "1.4.4"]` to your `project.clj`.
 
-# Builds
-http://travis-ci.org/#!/tebeka/clj-digest
-
 # License
-Copyright&copy; 2014 Miki Tebeka <miki.tebeka@gmail.com>
+Copyright&copy; 2016 Miki Tebeka <miki.tebeka@gmail.com>
 
 Distributed under the Eclipse Public License, the same as Clojure.
