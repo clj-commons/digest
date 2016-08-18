@@ -1,4 +1,5 @@
-2016-06-16 version ???
+2016-06-16 version 1.4.5
+    * Added licence to project.clj (@raxod502 in PR #4)
     * Clojure 1.8.0
 
 2014-04-02 version 1.4.4
