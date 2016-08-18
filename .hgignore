@@ -1,9 +1,10 @@
 syntax: glob
 
+.lein-*
 README.html
 classes
 digest-*.jar
 lib
 pom.xml
-.lein-*
+pom.xml.asc
 target
