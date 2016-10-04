@@ -27,7 +27,7 @@ namespace. Each can handle the following input types:
     "163883d3e0e3b0c028d35b626b98564be8d9d649ed8adb8b929cb8c94c735c59"
 
 # Installation
-Add `[digest "1.4.4"]` to your `project.clj`.
+Add `[digest "1.4.5"]` to your `project.clj`.
 
 # License
 Copyright&copy; 2016 Miki Tebeka <miki.tebeka@gmail.com>
