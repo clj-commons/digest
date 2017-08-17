@@ -78,11 +78,22 @@
         digest-names (filter #(re-find #"MessageDigest\.[A-Z0-9-]+$" %) names)]
     (set (map #(last (split % #"\.")) digest-names))))
 
+(defn create-fn!
+  [algorithm-name]
+  (let [update-meta (fn [meta]
+                      (assoc meta
+                             :doc (str "Encode the given message with the " algorithm-name " algorithm.")
+                             :arglists '([message])))]
+    (-> (intern 'digest
+                (symbol (lower-case algorithm-name))
+                (partial digest algorithm-name))
+        (alter-meta! update-meta))))
+
 (defn- create-fns []
   "Create utility function for each digest algorithms.
    For example will create an md5 function for MD5 algorithm."
-  (dorun (map #(intern 'digest (symbol (lower-case %)) (partial digest %))
-              (algorithms))))
+  (doseq [algorithm (algorithms)]
+    (create-fn! algorithm)))
 
 ; Create utililty functions such as md5, sha-2 ...
 (create-fns)

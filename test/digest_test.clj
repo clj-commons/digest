@@ -1,7 +1,7 @@
 (ns digest-test
-  (:use [digest] :reload-all)
-  (:use [clojure.string :only (lower-case)])
-  (:use [clojure.test])
+  (:require [clojure.string :refer [lower-case includes?]]
+            [clojure.test :refer :all]
+            [digest :refer :all :reload-all true])
   (:import java.io.File))
 
 (deftest md5-test
@@ -19,6 +19,12 @@
 (deftest utils-test
   (for [name (algorithms)]
     (dorun (is (ns-resolve *ns* (symbol (lower-case name)))))))
+
+(deftest function-metadata-test
+  (is (includes? (:doc (meta #'sha-256))
+                 "SHA-256"))
+  (is (= '([message])
+         (:arglists (meta #'md5)))))
 
 (def ^:dynamic *logo-md5* "38cf20fa3c9dc72be56965eb1c311dfa")
 (def ^:dynamic *logo-sha256* 
