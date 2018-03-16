@@ -15,13 +15,13 @@
   [^InputStream reader]
   (let [^bytes  buffer (make-array Byte/TYPE *buffer-size*)
         size (.read reader buffer)]
-    (when (> size 0)
+    (when (pos? size)
       (if (= size *buffer-size*) buffer (Arrays/copyOf buffer size)))))
 
 (defn- byte-seq
   "Return a sequence of [data size] from reader."
   [^InputStream reader]
-  (take-while (complement nil?) (repeatedly (partial read-some reader))))
+  (take-while some? (repeatedly (partial read-some reader))))
 
 (defn- signature
   "Get signature (string) of digest."
@@ -95,5 +95,5 @@
   (doseq [algorithm (algorithms)]
     (create-fn! algorithm)))
 
-; Create utililty functions such as md5, sha-2 ...
+; Create utility functions such as md5, sha-2 ...
 (create-fns)
