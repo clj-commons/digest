@@ -1,3 +1,7 @@
+2018-03-18 version 1.4.7
+* Minor simplifications, fix typo.
+* Clojure 1.9.0
+
 2016-08-18 version 1.4.6
 * Include standard function metadata on digest functions (@holguinj  in PR #6)
 
