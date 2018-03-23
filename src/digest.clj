@@ -1,5 +1,7 @@
 (ns digest
-  (:require [clojure.string :refer [lower-case split] :as string])
+  #^{:author "Miki Tebeka <miki.tebeka@gmail.com>"
+     :doc    "Message digest algorithms for Clojure"}
+  (:require [clojure.string :refer [join lower-case split]])
   (:import (java.io File FileInputStream InputStream)
            (java.security MessageDigest Provider Security)
            (java.util Arrays)))
@@ -14,8 +16,7 @@
   (let [^bytes buffer (make-array Byte/TYPE *buffer-size*)
         size (.read reader buffer)]
     (when (pos? size)
-      (cond-> buffer
-        (not= size *buffer-size*) (Arrays/copyOf size)))))
+      (if (= size *buffer-size*) buffer (Arrays/copyOf buffer size)))))
 
 (defn- byte-seq
   "Return a sequence of [data size] from reader."
@@ -27,7 +28,7 @@
   [^MessageDigest algorithm]
   (let [size (* 2 (.getDigestLength algorithm))
         sig (.toString (BigInteger. 1 (.digest algorithm)) 16)
-        padding (string/join (repeat (- size (count sig)) "0"))]
+        padding (join (repeat (- size (count sig)) "0"))]
     (str padding sig)))
 
 (defprotocol Digestible
@@ -73,8 +74,8 @@
 (defn algorithms
   "List support digest algorithms."
   []
-  (let [providers    (vec (Security/getProviders))
-        names        (mapcat (fn [^Provider p] (enumeration-seq (.keys p))) providers)
+  (let [providers (vec (Security/getProviders))
+        names (mapcat (fn [^Provider p] (enumeration-seq (.keys p))) providers)
         digest-names (filter #(re-find #"MessageDigest\.[A-Z0-9-]+$" %) names)]
     (set (map #(last (split % #"\.")) digest-names))))
 
@@ -82,10 +83,10 @@
   [algorithm-name]
   (let [update-meta (fn [meta]
                       (assoc meta
-                        :doc (str "Encode the given message with the " algorithm-name " algorithm.")
-                        :arglists '([message])))]
-    (-> 'digest
-        (intern (symbol (lower-case algorithm-name))
+                             :doc (str "Encode the given message with the " algorithm-name " algorithm.")
+                             :arglists '([message])))]
+    (-> (intern 'digest
+                (symbol (lower-case algorithm-name))
                 (partial digest algorithm-name))
         (alter-meta! update-meta))))
 
@@ -93,7 +94,8 @@
   "Create utility function for each digest algorithms.
    For example will create an md5 function for MD5 algorithm."
   []
-  (run! create-fn! (algorithms)))
+  (doseq [algorithm (algorithms)]
+    (create-fn! algorithm)))
 
-; Create utility functions such as md5, sha-2 ...
+; Create utility functions such as md5, sha-256 ...
 (create-fns)
