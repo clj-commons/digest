@@ -1,10 +1,10 @@
 (ns digest
-  #^{ :author "Miki Tebeka <miki.tebeka@gmail.com>"
-      :doc "Message digest algorithms for Clojure"}
-  (:use [clojure.string :only (split lower-case)])
-  (:import java.util.Arrays
-           (java.security MessageDigest Security Provider)
-           (java.io FileInputStream File InputStream)))
+  #^{:author "Miki Tebeka <miki.tebeka@gmail.com>"
+     :doc    "Message digest algorithms for Clojure"}
+  (:require [clojure.string :refer [join lower-case split]])
+  (:import (java.io File FileInputStream InputStream)
+           (java.security MessageDigest Provider Security)
+           (java.util Arrays)))
 
 ; Default buffer size for reading
 (def ^:dynamic *buffer-size* 1024)
@@ -13,7 +13,7 @@
   "Read some data from reader. Return [data size] if there's more to read,
   otherwise nil."
   [^InputStream reader]
-  (let [^bytes  buffer (make-array Byte/TYPE *buffer-size*)
+  (let [^bytes buffer (make-array Byte/TYPE *buffer-size*)
         size (.read reader buffer)]
     (when (pos? size)
       (if (= size *buffer-size*) buffer (Arrays/copyOf buffer size)))))
@@ -28,7 +28,7 @@
   [^MessageDigest algorithm]
   (let [size (* 2 (.getDigestLength algorithm))
         sig (.toString (BigInteger. 1 (.digest algorithm)) 16)
-        padding (apply str (repeat (- size (count sig)) "0"))]
+        padding (join (repeat (- size (count sig)) "0"))]
     (str padding sig)))
 
 (defprotocol Digestible
@@ -36,13 +36,13 @@
 
 (extend-protocol Digestible
   (class (make-array Byte/TYPE 0))
-  (-digest  [message algorithm]
+  (-digest [message algorithm]
     (-digest [message] algorithm))
-  
+
   java.util.Collection
-  ;; Code "borrowed" from 
+  ;; Code "borrowed" from
   ;; * http://www.holygoat.co.uk/blog/entry/2009-03-26-1
-  ;; * http://www.rgagnon.com/javadetails/java-0416.html 
+  ;; * http://www.rgagnon.com/javadetails/java-0416.html
   (-digest [message algorithm]
     (let [^MessageDigest algo (MessageDigest/getInstance algorithm)]
       (.reset algo)
@@ -52,11 +52,11 @@
   String
   (-digest [message algorithm]
     (-digest [(.getBytes message)] algorithm))
-  
+
   InputStream
   (-digest [reader algorithm]
     (-digest (byte-seq reader) algorithm))
-  
+
   File
   (-digest [file algorithm]
     (with-open [f (FileInputStream. file)]
@@ -71,9 +71,10 @@
   [algorithm message]
   (-digest message algorithm))
 
-(defn algorithms []
+(defn algorithms
   "List support digest algorithms."
-  (let [providers (into [] (Security/getProviders))
+  []
+  (let [providers (vec (Security/getProviders))
         names (mapcat (fn [^Provider p] (enumeration-seq (.keys p))) providers)
         digest-names (filter #(re-find #"MessageDigest\.[A-Z0-9-]+$" %) names)]
     (set (map #(last (split % #"\.")) digest-names))))
@@ -89,11 +90,12 @@
                 (partial digest algorithm-name))
         (alter-meta! update-meta))))
 
-(defn- create-fns []
+(defn- create-fns
   "Create utility function for each digest algorithms.
    For example will create an md5 function for MD5 algorithm."
+  []
   (doseq [algorithm (algorithms)]
     (create-fn! algorithm)))
 
-; Create utility functions such as md5, sha-2 ...
+; Create utility functions such as md5, sha-256 ...
 (create-fns)

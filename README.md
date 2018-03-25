@@ -4,7 +4,7 @@
 
 `digest` - Message digest library for Clojure. Providing md5, sha-256, ...
 
-There are several digest function (such as `md5`, `sha-256` ...) in this
+There are several digest functions (such as `md5`, `sha-256` ...) in this
 namespace. Each can handle the following input types:
 
 * java.lang.String
@@ -27,7 +27,7 @@ namespace. Each can handle the following input types:
     "163883d3e0e3b0c028d35b626b98564be8d9d649ed8adb8b929cb8c94c735c59"
 
 # Installation
-Add `[digest "1.4.6"]` to your `project.clj`.
+Add `[digest "1.4.8"]` to your `project.clj`.
 
 # License
 Copyright&copy; 2017 Miki Tebeka <miki.tebeka@gmail.com>
