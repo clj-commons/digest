@@ -1,6 +1,7 @@
-(ns digest
-  #^{:author "Miki Tebeka <miki.tebeka@gmail.com>"
-     :doc    "Message digest algorithms for Clojure"}
+(ns
+  ^{:author "Miki Tebeka <miki.tebeka@gmail.com>"
+    :doc    "Message digest algorithms for Clojure"}
+  digest
   (:require [clojure.string :refer [join lower-case split]])
   (:import (java.io File FileInputStream InputStream)
            (java.security MessageDigest Provider Security)
