@@ -5,6 +5,6 @@ test:
 	lein test
 
 publish:
-	lein deploy clojars-https
+	lein deploy clojars
 
 .PHONY: all test publish
