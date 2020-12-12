@@ -1,6 +1,6 @@
 # digest
 
-[![Build Status](https://travis-ci.org/tebeka/clj-digest.svg?branch=master)](https://travis-ci.org/tebeka/clj-digest)
+![Build Status](https://github.com/tebeka/clj-digest/workflows/Test/badge.svg)
 
 `digest` - Message digest library for Clojure. Providing md5, sha-256, ...
 
