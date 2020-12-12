@@ -1,3 +1,6 @@
+2018-03-25 version 1.4.10
+* Changes to test for public domain data (issue #11)
+
 2018-03-25 version 1.4.8
 * Minor fixes (@laurio in PR #8)
 

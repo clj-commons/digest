@@ -18,8 +18,8 @@ namespace. Each can handle the following input types:
     user=> (require 'digest)
     nil
     ; On a string
-    user=> (digest/md5 "foo")
-    "acbd18db4cc2f85cedef654fccc4a4d8"
+    user=> (digest/md5 "clojure")
+    "32c0d97f82a20e67c6d184620f6bd322"
     ; On a file
     user=> (use 'clojure.java.io)
     nil
@@ -27,9 +27,11 @@ namespace. Each can handle the following input types:
     "163883d3e0e3b0c028d35b626b98564be8d9d649ed8adb8b929cb8c94c735c59"
 
 # Installation
-Add `[digest "1.4.9"]` to your `project.clj`.
+Add `[digest "1.4.10"]` to your `project.clj`.
 
 # License
 Copyright&copy; 2017 Miki Tebeka <miki.tebeka@gmail.com>
 
 Distributed under the Eclipse Public License (same as Clojure).
+
+Snail image in `tests` is public domain by Miki Tebeka
