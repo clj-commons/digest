@@ -1,0 +1,17 @@
+on: [push, pull_request]
+name: Test
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Java
+      uses: actions/setup-java@v1
+    - name: Install lein
+      run: |
+        curl -L -o /usr/local/bin https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
+        chmod +x /usr/local/bin/lein
+        lein
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Test
+      run: lein test
