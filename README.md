@@ -38,6 +38,14 @@ The single-segment `digest` namespace is deprecated since `1.4.10+`. Use
 # Installation
 Add `[org.clojars/digest "1.4.10"]` to your `project.clj`.
 
+# Dev
+
+## Deployment
+
+Run `bb deploy` to deploy using the clj-commons
+[release](https://github.com/clj-commons/infra/blob/main/deployment/release.bb)
+script.
+
 # License
 Copyright&copy; 2017 Miki Tebeka <miki.tebeka@gmail.com>
 

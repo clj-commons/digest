@@ -1,0 +1,7 @@
+{:tasks
+ {:requires ([babashka.curl :as curl])
+  -deploy-script {:task (-> "https://raw.githubusercontent.com/clj-commons/infra/main/deployment/release.bb"
+                            curl/get
+                            :body)}
+  deploy {:depends [-deploy-script]
+          :task (load-string -deploy-script)}}}
