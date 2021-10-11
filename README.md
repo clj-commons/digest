@@ -30,11 +30,6 @@ user=> (digest/sha-256 (as-file "/tmp/hello.txt"))
 "163883d3e0e3b0c028d35b626b98564be8d9d649ed8adb8b929cb8c94c735c59"
 ```
 
-# Deprecation
-
-The single-segment `digest` namespace is deprecated since `1.4.10+`. Use
-`clj-commons.digest` instead.
-
 # Installation
 Add `[org.clojars/digest "1.4.10"]` to your `project.clj`.
 
@@ -44,7 +39,8 @@ Add `[org.clojars/digest "1.4.10"]` to your `project.clj`.
 
 Run `bb deploy` to deploy using the clj-commons
 [release](https://github.com/clj-commons/infra/blob/main/deployment/release.bb)
-script.
+script or create a tag manually in the format `Release-1.4.<commit-count>` and
+push it.
 
 # License
 Copyright&copy; 2017 Miki Tebeka <miki.tebeka@gmail.com>

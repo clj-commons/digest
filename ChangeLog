@@ -1,3 +1,6 @@
+2021-10-11 version 1.4.93
+* The digest namespace has moved to clj-commons.digest. The old one is deprecated.
+
 2018-03-25 version 1.4.10
 * Test using for public domain data (issue #11)
 
