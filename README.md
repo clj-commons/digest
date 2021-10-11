@@ -1,10 +1,10 @@
 # clj-commons/digest
 
-[![Clojars Project](https://img.shields.io/clojars/v/org.clj-commons/digest.svg)](https://clojars.org/org.clj-commons/digest) 
+[![Clojars Project](https://img.shields.io/clojars/v/org.clj-commons/digest.svg)](https://clojars.org/org.clj-commons/digest)
 [![cljdoc badge](https://cljdoc.org/badge/org.clj-commons/digest)](https://cljdoc.org/d/org.clj-commons/digest)
-[![CircleCI Status](https://circleci.com/gh/clj-commons/clj-digest.svg?style=svg)](https://circleci.com/gh/clj-commons/clj-digest)
+[![CircleCI Status](https://circleci.com/gh/clj-commons/digest.svg?style=svg)](https://circleci.com/gh/clj-commons/digest)
 
-`clj-commons/digest` - A message digest library for Clojure. Providing md5, sha-256, ...
+`clj-commons/digest` - A message digest library for Clojure. Providing `md5`, `sha-256`, ...
 
 There are several digest functions (such as `md5`, `sha-256` ...) in this
 namespace. Each can handle the following input types:
