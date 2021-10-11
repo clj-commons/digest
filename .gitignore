@@ -6,3 +6,4 @@ lib
 pom.xml
 pom.xml.asc
 target
+/.cpcache

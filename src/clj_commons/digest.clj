@@ -1,9 +1,7 @@
 (ns
   ^{:author "Miki Tebeka <miki.tebeka@gmail.com>"
-    :doc    "Message digest algorithms for Clojure"
-    ;; single segment namespace is deprecated, use clj-commons/digest
-    :deprecated true}
-  digest
+    :doc    "Message digest algorithms for Clojure"}
+  clj-commons.digest
   (:require [clojure.string :refer [join lower-case split]])
   (:import (java.io File FileInputStream InputStream)
            (java.security MessageDigest Provider Security)
@@ -75,20 +73,20 @@
   (-digest message algorithm))
 
 (defn algorithms
-  "List support digest algorithms."
+  "List supported digest algorithms."
   []
   (let [providers (vec (Security/getProviders))
         names (mapcat (fn [^Provider p] (enumeration-seq (.keys p))) providers)
         digest-names (filter #(re-find #"MessageDigest\.[A-Z0-9-]+$" %) names)]
     (set (map #(last (split % #"\.")) digest-names))))
 
-(defn create-fn!
+(defn- create-fn!
   [algorithm-name]
   (let [update-meta (fn [meta]
                       (assoc meta
                              :doc (str "Encode the given message with the " algorithm-name " algorithm.")
                              :arglists '([message])))]
-    (-> (intern 'digest
+    (-> (intern *ns*
                 (symbol (lower-case algorithm-name))
                 (partial digest algorithm-name))
         (alter-meta! update-meta))))
@@ -102,3 +100,9 @@
 
 ; Create utility functions such as md5, sha-256 ...
 (create-fns)
+
+;;;; Hints for clj-kondo
+
+(comment
+  (declare sha3-384 sha-256 sha3-256 sha-384 sha3-512 sha-1 sha-224 sha1 sha-512 md2 sha sha3-224 md5)
+  )
