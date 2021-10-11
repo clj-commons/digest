@@ -35,13 +35,13 @@ user=> (digest/sha-256 (io/file "/tmp/hello.txt"))
 ## deps.edn
 
 ``` clojure
-org.clj-commons/digest {:mvn/version "1.4.96"}
+org.clj-commons/digest {:mvn/version "1.4.99"}
 ```
 
 ## lein
 
 ``` clojure
-[org.clj-commons/digest "1.4.96"]
+[org.clj-commons/digest "1.4.99"]
 ```
 
 # Dev

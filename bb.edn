@@ -7,13 +7,17 @@
   {:task
    (if (r/all-good?)
      (do
-       (r/release!)
        (let [v (r/version!)
-             cc (r/commit-count!)
+             ;; commit count + 1 for README update
+             cc (inc (Integer/parseInt (r/commit-count!)))
              rt (r/release-tag (r/commit-count-version v cc))]
          (spit "README.md"
                (str/replace (slurp "README.md")
                             (re-pattern (format "(%s)\\.(\\d+)" v))
                             (fn [[_ version _]]
-                              (str version "." cc))))))
+                              (str version "." cc))))
+         (shell "git add README.md")
+         (shell "git commit -m 'Bump version in README'")
+         (shell "git push"))
+       (r/release!))
      (println "Unclean!"))}}}
