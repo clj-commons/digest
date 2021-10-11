@@ -2,7 +2,8 @@
   ^{:author "Miki Tebeka <miki.tebeka@gmail.com>"
     :doc    "Message digest algorithms for Clojure"
     ;; single segment namespace is deprecated, use clj-commons/digest
-    :deprecated true}
+    :deprecated true
+    :no-doc true}
   digest
   (:require [clojure.string :refer [join lower-case split]])
   (:import (java.io File FileInputStream InputStream)
