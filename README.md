@@ -17,16 +17,18 @@ namespace. Each can handle the following input types:
 
 # Usage
 
-    user=> (require '[clj-commons.digest :as digest])
-    nil
-    ; On a string
-    user=> (digest/md5 "clojure")
-    "32c0d97f82a20e67c6d184620f6bd322"
-    ; On a file
-    user=> (use 'clojure.java.io)
-    nil
-    user=> (digest/sha-256 (as-file "/tmp/hello.txt"))
-    "163883d3e0e3b0c028d35b626b98564be8d9d649ed8adb8b929cb8c94c735c59"
+``` clojure
+user=> (require '[clj-commons.digest :as digest])
+nil
+; On a string
+user=> (digest/md5 "clojure")
+"32c0d97f82a20e67c6d184620f6bd322"
+; On a file
+user=> (use 'clojure.java.io)
+nil
+user=> (digest/sha-256 (as-file "/tmp/hello.txt"))
+"163883d3e0e3b0c028d35b626b98564be8d9d649ed8adb8b929cb8c94c735c59"
+```
 
 # Deprecation
 
