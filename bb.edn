@@ -1,7 +1,19 @@
-{:tasks
- {:requires ([babashka.curl :as curl])
-  -deploy-script {:task (-> "https://raw.githubusercontent.com/clj-commons/infra/main/deployment/release.bb"
-                            curl/get
-                            :body)}
-  deploy {:depends [-deploy-script]
-          :task (load-string -deploy-script)}}}
+{:deps {org.clj-commons/infra {:git/url "https://github.com/clj-commons/infra"
+                               :git/sha "a3ebcff4d32c4b84f001f86cdee5c76358d15ea5"}}
+ :tasks
+ {:requires ([clojure.string :as str]
+             [deployment.release :as r])
+  deploy
+  {:task
+   (if (r/all-good?)
+     (do
+       (r/release!)
+       (let [v (r/version!)
+             cc (r/commit-count!)
+             rt (r/release-tag (r/commit-count-version v cc))]
+         (spit "README.md"
+               (str/replace (slurp "README.md")
+                            (re-pattern (format "(%s)\\.(\\d+)" v))
+                            (fn [[_ version _]]
+                              (str version "." cc))))))
+     (println "Unclean!"))}}}

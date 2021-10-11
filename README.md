@@ -24,14 +24,25 @@ nil
 user=> (digest/md5 "clojure")
 "32c0d97f82a20e67c6d184620f6bd322"
 ; On a file
-user=> (use 'clojure.java.io)
+user=> (require '[clojure.java.io :as io])
 nil
-user=> (digest/sha-256 (as-file "/tmp/hello.txt"))
+user=> (digest/sha-256 (io/file "/tmp/hello.txt"))
 "163883d3e0e3b0c028d35b626b98564be8d9d649ed8adb8b929cb8c94c735c59"
 ```
 
 # Installation
-Add `[org.clojars/digest "1.4.10"]` to your `project.clj`.
+
+## deps.edn
+
+``` clojure
+org.clj-commons/digest {:mvn/version "1.14.95"}
+```
+
+## lein
+
+``` clojure
+[org.clj-commons/digest "1.4.95"]
+```
 
 # Dev
 
